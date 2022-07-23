@@ -72,6 +72,15 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+class SearchNode:
+    def __init__(self,sta,act):
+        self.state=sta
+        self.actions=act
+    def getState(self):
+        return self.state
+    def getActions(self):
+        return self.actions
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -81,23 +90,74 @@ def depthFirstSearch(problem):
 
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
-
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
+    """print("Start:", problem.getStartState())
+    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))"""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # complete but not optimal, it's allowed for this question
+    fringe=util.Stack()
+    closed=set()
+    startState=problem.getStartState()
+    fringe.push(SearchNode(startState,list()))
+    closed.add(problem.getStartState)
+    while True:
+        if fringe.isEmpty(): return None
+        curNode=fringe.pop()
+        if problem.isGoalState(curNode.getState()): 
+            #pdb.set_trace()
+            return curNode.getActions()
+        closed.add(curNode.getState())
+        #pdb.set_trace()
+        for successor in problem.getSuccessors(curNode.getState()):
+            if not closed.__contains__(successor[0]):                                          
+                tmp=list(x for x in curNode.getActions())  # deep copy tmp=curNode.getActions() is WRONG!
+                tmp.append(successor[1])
+                fringe.push(SearchNode(successor[0],tmp))
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    fringe=util.PriorityQueue()
+    closed=set()
+    startState=problem.getStartState()
+    fringe.update(SearchNode(startState,list()),0)
+    closed.add(problem.getStartState)
+    while True:
+        if fringe.isEmpty(): return None
+        curNode=fringe.pop()
+        if problem.isGoalState(curNode.getState()): 
+            #pdb.set_trace()
+            return curNode.getActions()
+        closed.add(curNode.getState())
+        #pdb.set_trace()
+        for successor in problem.getSuccessors(curNode.getState()):
+            if not closed.__contains__(successor[0]):
+                tmp=list(x for x in curNode.getActions())  # deep copy tmp=curNode.getActions() is WRONG!
+                tmp.append(successor[1])
+                fringe.update(SearchNode(successor[0],tmp),successor[2])
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    fringe=util.PriorityQueue()
+    closed=set()
+    startState=problem.getStartState()
+    fringe.update(SearchNode(startState,list()),0)
+    closed.add(problem.getStartState)
+    while True:
+        if fringe.isEmpty(): return None
+        curNode=fringe.pop()
+        if problem.isGoalState(curNode.getState()): 
+            #pdb.set_trace()
+            return curNode.getActions()
+        closed.add(curNode.getState())
+        #pdb.set_trace()
+        for successor in problem.getSuccessors(curNode.getState()):
+            if not closed.__contains__(successor[0]):
+                tmp=list(x for x in curNode.getActions())  # deep copy tmp=curNode.getActions() is WRONG!
+                tmp.append(successor[1])
+                fringe.update(SearchNode(successor[0],tmp),successor[2])
 
 def nullHeuristic(state, problem=None):
     """
