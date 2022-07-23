@@ -288,7 +288,6 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        self.corner1,self.corner2,self.corner3,self.corner4=False,False,False,False
 
     def getStartState(self):
         """
@@ -296,14 +295,22 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition,self.corner1,self.corner2,self.corner3,self.corner4)
+        visit=[False,False,False,False]
+        for i in range(0,4):
+            if self.startingPosition==self.corners[i]:
+                visit[i]=True
+        corner1,corner2,corner3,corner4=visit[0],visit[1],visit[2],visit[3]
+        return (self.startingPosition,corner1,corner2,corner3,corner4)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        return self.corner1==True and self.corner2==True and self.corner3==True and self.corner4==True
+        for i in range(1,5):
+            if state[i]==False:
+                return False
+        return True
 
     def getSuccessors(self, state):
         """
@@ -326,15 +333,17 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
                 nextPos=(nextx,nexty)
-                if(nextPos==self.corners[0]): self.corner1=True
-                elif(nextPos==self.corners[1]): self.corner2=True
-                elif(nextPos==self.corners[2]): self.corner3=True
-                elif(nextPos==self.corners[3]): self.corner4=True
-                nextState=(nextPos,self.corner1,self.corner2,self.corner3,self.corner4)
-                successors.append((nextState,action))
+                visit=[state[1],state[2],state[3],state[4]]
+                for i in range(0,4):
+                    if nextPos==self.corners[i]:
+                        visit[i]=True
+                corner1,corner2,corner3,corner4=visit[0],visit[1],visit[2],visit[3]
+                nextState=(nextPos,corner1,corner2,corner3,corner4)
+                successors.append((nextState,action,1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
+
 
     def getCostOfActions(self, actions):
         """
