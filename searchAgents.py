@@ -34,6 +34,7 @@ description for details.
 Good luck and happy searching!
 """
 
+from typing import Any
 from game import Directions
 from game import Agent
 from game import Actions
@@ -477,7 +478,34 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    # Solution1: the max manhattan distance from Pacman to food, 3/4
+    # x,y=position
+    # h=0
+    # top, right = problem.walls.height-2, problem.walls.width-2
+    # for i in range(0,right+1):
+    #     for j in range(0,top+1):
+    #         if foodGrid[i][j]:
+    #             h=max(h,abs(x-i)+abs(y-j))
+    # return h
+    # Solution2: the total number of the rest food, 2/4
+    # h=0
+    # top, right = problem.walls.height-2, problem.walls.width-2
+    # for i in range(0,right+1):
+    #     for j in range(0,top+1):
+    #         if foodGrid[i][j]:
+    #             h+=1
+    # return h
+    # Solution3: the max mazeDistance from Pacman to food, 5/4
+    h=0
+    top, right = problem.walls.height-2, problem.walls.width-2
+    for i in range(0,right+1):
+        for j in range(0,top+1):
+            if foodGrid[i][j]:
+                h=max(h,mazeDistance(position,(i,j),problem.startingGameState))
+    return h
+    
+
+    
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
